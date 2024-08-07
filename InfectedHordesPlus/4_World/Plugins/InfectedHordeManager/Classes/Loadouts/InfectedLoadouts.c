@@ -65,5 +65,41 @@ class HordeLoadouts
 		
 		return null;
 	}
+
+	HordeLoadout GetRandomLoadout(HordeCategory category)
+	{
+		array<HordeLoadout> validLoadouts = new array<HordeLoadout>;
+		for (int i = 0; i < m_Loadouts.Count(); i++)
+	        {
+	            if (m_Loadouts[i].GetCategory() == category || category == HordeCategory.None)
+	                validLoadouts.Insert(m_Loadouts[i]);
+	        }
+	
+	        if (validLoadouts.Count() == 0) return null;
+	
+	        HordeLoadout chosenLoadout = validLoadouts.GetRandomElement();
+	        
+	        array<string> randomizedGear = SelectRandomItems(chosenLoadout.GetGear());
+	        array<string> randomizedLoot = SelectRandomItems(chosenLoadout.GetLoot());
+	
+	        return new HordeLoadout(chosenLoadout.GetCategory(), chosenLoadout.GetName(), randomizedGear, randomizedLoot);
+	}
+	
+	private array<string> SelectRandomItems(array<string> items)
+	{
+	        array<string> result = new array<string>;
+	        int count = Math.RandomIntInclusive(0, items.Count());
+	
+	        while (result.Count() < count)
+	        {
+	            int index = Math.RandomIntInclusive(0, items.Count() - 1);
+	            if (!result.Contains(items[index]))
+	            {
+	                result.Insert(items[index]);
+	            }
+	        }
+	        
+	        return result;
+	}
 	
 }
